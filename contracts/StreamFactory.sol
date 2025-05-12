@@ -33,4 +33,15 @@ contract StreamFactory {
 
         return streamId;
     }
+
+    function getStreamBalance(uint256 streamId) public view returns (uint256) {
+        Stream memory stream = streams[streamId];
+        if (!stream.isActive) return 0;
+        
+        uint256 elapsed = block.timestamp - stream.startTime;
+        if (elapsed >= stream.duration) {
+            return 0;
+        }
+        return stream.amount - ((stream.amount * elapsed) / stream.duration);
+    }
 }
